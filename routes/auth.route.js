@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
-const { required } = require('joi');
 const User = require('../models/user.model');
 const {authSchema} = require('../helpers/validation_schema');
+const {signAccessToken} = require('../helpers/jwt_helper');
+
+
 router.post('/register', async (req, res, next) => {
     try {
         // const {email, password} = req.body;
@@ -19,7 +21,8 @@ router.post('/register', async (req, res, next) => {
         const user = new User({email, password})
         const saveUser = await user.save();
 
-        res.send(saveUser)
+        const accesToken = await signAccessToken(saveUser.id)
+        res.send({accesToken})
 
     } catch (error) {
         if (error.isJoi === true) error.status = 422; 
