@@ -32,7 +32,22 @@ router.post('/register', async (req, res, next) => {
 })
 
 router.post('/login', async (req, res, next) => {
-    res.send('login route!')
+    try {
+        const result = await authSchema.validateAsync(req.body)
+        const {email, password} = result
+
+        const user = await User.findOne({email})
+        if (!user) throw createError.NotFound("User Not Register")
+
+        const isMatch = await user.isValidPassword(password)
+        if (!isMatch) throw createError.Unauthorized('Username/Password is invalid');
+
+        const accesToken = await signAccessToken(user.id)
+        res.send(accesToken)
+    } catch (error) {
+        if (error.isJoi === true) return next(createError.BadRequest('Invalid Username/Password'))
+        next(error)        
+    }
 })
 
 router.post('/refesh-token', async (req, res, next) => {

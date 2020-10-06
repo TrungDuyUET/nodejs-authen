@@ -2,14 +2,19 @@ GET http://localhost:5000
 
 ### login 
 POST http://localhost:5000/auth/login
+Content-Type: application/json
 
+{
+    "email": "shawnkoll9@gmail.com",
+    "password": "12345677"
+}
 
 ### register
 POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "shawnko9@gmail.com",
+    "email": "shawnkoll9@gmail.com",
     "password": "12345677"
 }
 
@@ -18,3 +23,5 @@ POST http://localhost:5000/auth/refesh-token
 
 ###logout
 DELETE http://localhost:5000/auth/logout
+
+### eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDE5NTkwODMsImV4cCI6MTYwMTk2MjY4MywiYXVkIjoiNWY3YmY0YWFkMzkyZjg0MzIzNGM3NmZiIiwiaXNzIjoiaHR0cHM6Ly9waWNrdXJwYWdlLmNvbS8ifQ.P61DZTLwR8pmWeb8FDmwh-mGZRYBWq_-61CRvZpHZkE
