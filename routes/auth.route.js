@@ -3,8 +3,11 @@ const router = express.Router();
 const createError = require('http-errors');
 const User = require('../models/user.model');
 const {authSchema} = require('../helpers/validation_schema');
-const {signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper');
-
+const {signAccessToken, 
+        signRefreshToken, 
+        verifyRefreshToken, 
+        verifyAccessToken} = require('../helpers/jwt_helper');
+const client = require('../helpers/init_redis');
 
 router.post('/register', async (req, res, next) => {
     try {
@@ -74,6 +77,14 @@ router.delete('/logout', async (req, res, next) => {
         const {refreshToken} = req.body
         if (!refreshToken) throw createError.BadRequest()
         const userId = await verifyRefreshToken(refreshToken);
+        client.DEL(userId, (err, val) => {
+            if(err){
+                console.log(err.message);
+                throw createError.InternalServerError();
+            }
+            console.log(val);
+            res.sendStatus(204)
+        })
     } catch (error) {
         next(error)
     }
